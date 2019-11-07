@@ -1,10 +1,6 @@
 #ifndef FUNC_H
 #define FUNC_H
-int sdf_open(char *filename, int mode);
-int sdf_read(int fd, int offset, void *buf, int size);
-int sdf_write(int fd, int offset, void *buf, int size);
-int sdf_close(int fd);
-int sdf_setsize(int fd, u64 size);
+
 
 void setCpuClockLock(int v);
 void lockCpuClock();

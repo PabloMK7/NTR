@@ -1,18 +1,31 @@
 #ifndef SVC_H
 #define SVC_H
 
-typedef enum{
-	MEMOP_FREE = 1,
-	MEMOP_RESERVE = 2,
-	MEMOP_COMMIT = 3,
-	MEMOP_MAP = 4,
-	MEMOP_UNMAP = 5,
-	MEMOP_PROTECT = 6,
-	MEMOP_REGION_APP = 0x100,
-	MEMOP_REGION_SYSTEM = 0x200,
-	MEMOP_REGION_BASE = 0x300,
-	MEMOP_LINEAR = 0x1000,
-}MEMORY_OPERATION;
+typedef enum {
+	MEMOP_FREE = 1, ///< Memory un-mapping
+	MEMOP_RESERVE = 2, ///< Reserve memory
+	MEMOP_ALLOC = 3, ///< Memory mapping
+	MEMOP_MAP = 4, ///< Mirror mapping
+	MEMOP_UNMAP = 5, ///< Mirror unmapping
+	MEMOP_PROT = 6, ///< Change protection
+
+	MEMOP_REGION_APP = 0x100, ///< APPLICATION memory region.
+	MEMOP_REGION_SYSTEM = 0x200, ///< SYSTEM memory region.
+	MEMOP_REGION_BASE = 0x300, ///< BASE memory region.
+
+	MEMOP_OP_MASK = 0xFF,    ///< Operation bitmask.
+	MEMOP_REGION_MASK = 0xF00,   ///< Region bitmask.
+	MEMOP_LINEAR_FLAG = 0x10000, ///< Flag for linear memory operations
+
+	MEMOP_ALLOC_LINEAR = MEMOP_LINEAR_FLAG | MEMOP_ALLOC, ///< Allocates linear memory.
+} MemOp;
+
+typedef enum {
+	MEMPERM_READ = 1,          ///< Readable
+	MEMPERM_WRITE = 2,          ///< Writable
+	MEMPERM_EXECUTE = 4,          ///< Executable
+	MEMPERM_DONTCARE = 0x10000000, ///< Don't care
+} MemPerm;
 
 	u32* getThreadCommandBuffer(void);
 	
@@ -37,7 +50,6 @@ typedef enum{
 	Result svc_createThread(Handle* thread, ThreadFunc entrypoint, u32 arg, u32* stacktop, s32 threadpriority, s32 processorid);
 	void svc_exitThread();
 	void svc_sleepThread(s64 ns);
-	Result svc_openThread(Handle* thread, Handle process, u32 threadId);
 	Result svc_createMutex(Handle* mutex, bool initialLocked);
 	Result svc_releaseMutex(Handle handle);
 	Result svc_releaseSemaphore(s32* count, Handle semaphore, s32 releaseCount);
@@ -60,13 +72,4 @@ typedef enum{
 	Result svc_setThreadIdealProcessor(Handle handle, u32 processorid);
 	Result svc_restartDma(Handle h, void * dst, void const* src, unsigned int size, signed char flag);
 	Result svc_kernelSetState(unsigned int Type, unsigned int Param0, unsigned int Param1, unsigned int Param2);
-
-	/**
-	* @brief Maps a block of process memory.
-	* @param process Handle of the process.
-	* @param destAddress Address of the mapped block in the current process.
-	* @param srcAddress Address of the mapped block in the source process.
-	* @param size Size of the block of the memory to map (truncated to a multiple of 0x1000 bytes).
-	*/
-	Result svcMapProcessMemoryEx(Handle process, u32 destAddr, u32 srcAddr, u32 size);
 #endif

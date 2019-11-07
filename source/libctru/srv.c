@@ -14,7 +14,7 @@ Result initSrv()
 	return srv_RegisterClient(&srvHandle);
 }
 
-void exitSrv()
+Result exitSrv()
 {
 	if(srvHandle)svc_closeHandle(srvHandle);
 	srvHandle = 0;

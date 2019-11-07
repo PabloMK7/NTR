@@ -37,10 +37,7 @@ void paint_letter(u8 letter, int x, int y, char r, char g, char b, int screen){
 	int k;
 	int c;
 	unsigned char mask;
-	
-	//Unused.
-	//unsigned char* _letter;
-
+	unsigned char* _letter;
 	unsigned char l;
 	if ((letter < 32) || (letter > 127)) {
 		letter = '?';
@@ -60,7 +57,6 @@ void paint_letter(u8 letter, int x, int y, char r, char g, char b, int screen){
 		}
 	}
 }
-
 void paint_word(char* word, int x,int y, char r, char g, char b, int screen){
     int tmp_x =x;
     int i;
